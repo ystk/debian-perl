@@ -1,4 +1,4 @@
-Subject: List packaged patches for 5.10.1-17 in patchlevel.h
+Subject: List packaged patches for 5.10.1-17squeeze4 in patchlevel.h
 Origin: vendor
 Bug-Debian: http://bugs.debian.org/567489
 
@@ -8,7 +8,7 @@ The list can be refreshed from information in debian/patches by running
 
 --- perl/patchlevel.bak
 +++ perl/patchlevel.h
-@@ -133,0 +134,51 @@
+@@ -133,0 +134,59 @@
 +	,"DEBPKG:debian/arm_thread_stress_timeout - http://bugs.debian.org/501970 Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts"
 +	,"DEBPKG:debian/cpan_config_path - Set location of CPAN::Config to /etc/perl as /usr may not be writable."
 +	,"DEBPKG:debian/cpan_definstalldirs - Provide a sensible INSTALLDIRS default for modules installed from CPAN."
@@ -59,4 +59,12 @@ The list can be refreshed from information in debian/patches by running
 +	,"DEBPKG:fixes/lc-numeric-sprintf - http://bugs.debian.org/601549 [perl #78632] [b3fd614] Fix sprintf not to ignore LC_NUMERIC with constants"
 +	,"DEBPKG:fixes/concat-stack-corruption - http://bugs.debian.org/596105 [perl #78674] [e3393f5] Fix stack pointer corruption in pp_concat() with 'use encoding'"
 +	,"DEBPKG:fixes/cgi-multiline-header - http://bugs.debian.org/606995 [CVE-2010-2761 CVE-2010-4410 CVE-2010-4411] CGI.pm MIME boundary and multiline header vulnerabilities"
-+	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17 in patchlevel.h"
++	,"DEBPKG:fixes/casing-taint-cve-2011-1487 - http://bugs.debian.org/622817 [perl #87336] fix unwanted taint laundering in lc(), uc() et al."
++	,"DEBPKG:fixes/safe-reval-rdo-cve-2010-1447 - [PATCH] Wrap by default coderefs returned by rdo and reval"
++	,"DEBPKG:fixes/encode-heap-overflow - [PATCH] Fix decode_xs n-byte heap-overflow security bug in"
++	,"DEBPKG:fixes/digest_eval_hole - Close the eval \"require $module\" security hole in"
++	,"DEBPKG:fixes/unregister_signal_handler - [PATCH] main: Unregister signal handler before destroying my_perl"
++	,"DEBPKG:fixes/CVE-2012-5195 - avoid calling memset with a negative count"
++	,"DEBPKG:fixes/CVE-2012-5526 - [PATCH 1/4] CR escaping for P3P header"
++	,"DEBPKG:fixes/storable-security-warning - [PATCH] add a note about security concerns in Storable"
++	,"DEBPKG:patchlevel - http://bugs.debian.org/567489 List packaged patches for 5.10.1-17squeeze4 in patchlevel.h"

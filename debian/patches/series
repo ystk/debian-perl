@@ -48,4 +48,12 @@ fixes/lc-numeric-docs.diff -p1
 fixes/lc-numeric-sprintf.diff -p1
 fixes/concat-stack-corruption.diff -p1
 fixes/cgi-multiline-header.diff -p1
+fixes/casing-taint-cve-2011-1487.diff -p1
+fixes/safe-reval-rdo-cve-2010-1447.diff -p1
+fixes/encode-heap-overflow.diff -p1
+fixes/digest_eval_hole.diff
+fixes/unregister_signal_handler.diff
+fixes/CVE-2012-5195.diff
+fixes/CVE-2012-5526.diff
+fixes/storable-security-warning.diff
 patchlevel -p1

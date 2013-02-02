@@ -9,7 +9,7 @@ This is fixed in blead by change 33129 but was skipped for maint-5.10.
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/lib/Math/BigInt/CalcEmu.pm b/lib/Math/BigInt/CalcEmu.pm
-index 79efac6..5810f5db 100644
+index 79efac6..5810f5d 100644
 --- a/lib/Math/BigInt/CalcEmu.pm
 +++ b/lib/Math/BigInt/CalcEmu.pm
 @@ -295,7 +295,7 @@ Math::BigInt::CalcEmu - Emulate low-level math with BigInt code
