@@ -1,7 +1,7 @@
 /* win32sck.c
  *
  * (c) 1995 Microsoft Corporation. All rights reserved. 
- * 		Developed by hip communications inc., http://info.hip.com/info/
+ * 		Developed by hip communications inc.
  * Portions (c) 1993 Intergraph Corporation. All rights reserved.
  *
  *    You may distribute under the terms of either the GNU General Public
@@ -261,18 +261,8 @@ win32_select(int nfds, Perl_fd_set* rd, Perl_fd_set* wr, Perl_fd_set* ex, const 
 #ifdef USE_SOCKETS_AS_HANDLES
     int i, fd, save_errno = errno;
     FD_SET nrd, nwr, nex;
+    bool just_sleep = TRUE;
 
-    /* winsock seems incapable of dealing with all three null fd_sets,
-     * so do the (millisecond) sleep as a special case
-     */
-    if (!(rd || wr || ex)) {
-	if (timeout)
-	    Sleep(timeout->tv_sec  * 1000 +
-		  timeout->tv_usec / 1000);	/* do the best we can */
-	else
-	    Sleep(UINT_MAX);
-	return 0;
-    }
     StartSockets();
 
     FD_ZERO(&nrd);
@@ -282,15 +272,30 @@ win32_select(int nfds, Perl_fd_set* rd, Perl_fd_set* wr, Perl_fd_set* ex, const 
 	if (rd && PERL_FD_ISSET(i,rd)) {
 	    fd = TO_SOCKET(i);
 	    FD_SET((unsigned)fd, &nrd);
+            just_sleep = FALSE;
 	}
 	if (wr && PERL_FD_ISSET(i,wr)) {
 	    fd = TO_SOCKET(i);
 	    FD_SET((unsigned)fd, &nwr);
+            just_sleep = FALSE;
 	}
 	if (ex && PERL_FD_ISSET(i,ex)) {
 	    fd = TO_SOCKET(i);
 	    FD_SET((unsigned)fd, &nex);
+            just_sleep = FALSE;
 	}
+    }
+
+    /* winsock seems incapable of dealing with all three fd_sets being empty,
+     * so do the (millisecond) sleep as a special case
+     */
+    if (just_sleep) {
+	if (timeout)
+	    Sleep(timeout->tv_sec  * 1000 +
+		  timeout->tv_usec / 1000);	/* do the best we can */
+	else
+	    Sleep(UINT_MAX);
+	return 0;
     }
 
     errno = save_errno;
@@ -468,9 +473,6 @@ int my_close(int fd)
 	int err;
 	err = closesocket(osf);
 	if (err == 0) {
-#if defined(USE_FIXED_OSFHANDLE) || defined(PERL_MSVCRT_READFIX)
-            _set_osfhnd(fd, INVALID_HANDLE_VALUE);
-#endif
 	    (void)close(fd);	/* handle already closed, ignore error */
 	    return 0;
 	}
@@ -499,9 +501,6 @@ my_fclose (FILE *pf)
 	win32_fflush(pf);
 	err = closesocket(osf);
 	if (err == 0) {
-#if defined(USE_FIXED_OSFHANDLE) || defined(PERL_MSVCRT_READFIX)
-            _set_osfhnd(win32_fileno(pf), INVALID_HANDLE_VALUE);
-#endif
 	    (void)fclose(pf);	/* handle already closed, ignore error */
 	    return 0;
 	}
@@ -515,62 +514,6 @@ my_fclose (FILE *pf)
 	}
     }
     return fclose(pf);
-}
-
-#undef fstat
-int
-my_fstat(int fd, Stat_t *sbufptr)
-{
-    /* This fixes a bug in fstat() on Windows 9x.  fstat() uses the
-     * GetFileType() win32 syscall, which will fail on Windows 9x.
-     * So if we recognize a socket on Windows 9x, we return the
-     * same results as on Windows NT/2000.
-     * XXX this should be extended further to set S_IFSOCK on
-     * sbufptr->st_mode.
-     */
-    int osf;
-    if (!wsock_started || IsWinNT()) {
-#if defined(WIN64) || defined(USE_LARGE_FILES)
-#if defined(__BORLANDC__) /* buk */
-	return win32_fstat(fd, sbufptr );
-#else
-	return _fstati64(fd, sbufptr);
-#endif
-#else
-	return fstat(fd, sbufptr);
-#endif
-    }
-
-    osf = TO_SOCKET(fd);
-    if (osf != -1) {
-	char sockbuf[256];
-	int optlen = sizeof(sockbuf);
-	int retval;
-
-	retval = getsockopt((SOCKET)osf, SOL_SOCKET, SO_TYPE, sockbuf, &optlen);
-	if (retval != SOCKET_ERROR || WSAGetLastError() != WSAENOTSOCK) {
-#if defined(__BORLANDC__)&&(__BORLANDC__<=0x520)
-	    sbufptr->st_mode = S_IFIFO;
-#else
-	    sbufptr->st_mode = _S_IFIFO;
-#endif
-	    sbufptr->st_rdev = sbufptr->st_dev = (dev_t)fd;
-	    sbufptr->st_nlink = 1;
-	    sbufptr->st_uid = sbufptr->st_gid = sbufptr->st_ino = 0;
-	    sbufptr->st_atime = sbufptr->st_mtime = sbufptr->st_ctime = 0;
-	    sbufptr->st_size = (Off_t)0;
-	    return 0;
-	}
-    }
-#if defined(WIN64) || defined(USE_LARGE_FILES)
-#if defined(__BORLANDC__) /* buk */
-    return win32_fstat(fd, sbufptr );
-#else
-    return _fstati64(fd, sbufptr);
-#endif
-#else
-    return fstat(fd, sbufptr);
-#endif
 }
 
 struct hostent *
@@ -795,8 +738,8 @@ win32_savecopyservent(struct servent*d, struct servent*s, const char *proto)
     d->s_name = s->s_name;
     d->s_aliases = s->s_aliases;
     d->s_port = s->s_port;
-#ifndef __BORLANDC__	/* Buggy on Win95 and WinNT-with-Borland-WSOCK */
-    if (!IsWin95() && s->s_proto && strlen(s->s_proto))
+#ifndef __BORLANDC__	/* Buggy on WinNT-with-Borland-WSOCK */
+    if (s->s_proto && strlen(s->s_proto))
 	d->s_proto = s->s_proto;
     else
 #endif
