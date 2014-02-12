@@ -1,15 +1,20 @@
-Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate slower build hosts
+From f624a9f1206cdd44fde99c40d82e2f326db485dd Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Sat, 1 Nov 2008 15:10:16 +0200
+Subject: Raise the timeout of ext/threads/shared/t/stress.t to accommodate
+ slower build hosts
+
 Bug-Debian: http://bugs.debian.org/501970
 
-
+Patch-Name: debian/arm_thread_stress_timeout.diff
 ---
- ext/threads-shared/t/stress.t |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ dist/threads-shared/t/stress.t |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ext/threads-shared/t/stress.t b/ext/threads-shared/t/stress.t
-index e36ab0a..33aa3b8 100755
---- a/ext/threads-shared/t/stress.t
-+++ b/ext/threads-shared/t/stress.t
+diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
+index adfd1ed..652a3e6 100644
+--- a/dist/threads-shared/t/stress.t
++++ b/dist/threads-shared/t/stress.t
 @@ -34,7 +34,7 @@ use threads::shared;
  {
      my $cnt = 50;
@@ -19,5 +24,3 @@ index e36ab0a..33aa3b8 100755
  
      my $mutex = 1;
      share($mutex);
--- 
-tg: (daf8b46..) debian/arm_thread_stress_timeout (depends on: upstream)

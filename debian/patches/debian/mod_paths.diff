@@ -1,3 +1,6 @@
+From 11633e598640b02e19329f323623af254fbac451 Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Tweak @INC ordering for Debian
 
 Our order is:
@@ -13,55 +16,36 @@ The rationale being that an admin (via site), or module packager
 (vendor) can chose to shadow core modules when there is a newer
 version than is included in core.
 
-
+Patch-Name: debian/mod_paths.diff
 ---
- perl.c |   62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 62 insertions(+), 0 deletions(-)
+ perl.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
 diff --git a/perl.c b/perl.c
-index 94f2b13..5a6744a 100644
+index f756e02..d26dcb0 100644
 --- a/perl.c
 +++ b/perl.c
-@@ -4879,9 +4879,14 @@ S_init_perllib(pTHX)
-     incpush(APPLLIB_EXP, TRUE, TRUE, TRUE, TRUE);
+@@ -4219,6 +4219,11 @@ S_init_perllib(pTHX)
+ 		      INCPUSH_ADD_SUB_DIRS|INCPUSH_CAN_RELOCATE);
  #endif
  
 +#ifdef DEBIAN
 +    /* for configuration where /usr is mounted ro (CPAN::Config, Net::Config) */
-+    incpush("/etc/perl", FALSE, FALSE, FALSE, FALSE);
-+#else
- #ifdef ARCHLIB_EXP
-     incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE, TRUE);
- #endif
++    S_incpush_use_sep(aTHX_ STR_WITH_LEN("/etc/perl"), 0x0);
 +#endif
- #ifdef MACOS_TRADITIONAL
-     {
- 	Stat_t tmpstatbuf;
-@@ -4906,11 +4911,13 @@ S_init_perllib(pTHX)
- #ifndef PRIVLIB_EXP
- #  define PRIVLIB_EXP "/usr/local/lib/perl5:/usr/local/lib/perl"
- #endif
-+#ifndef DEBIAN
- #if defined(WIN32)
-     incpush(PRIVLIB_EXP, TRUE, FALSE, TRUE, TRUE);
- #else
-     incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE, TRUE);
- #endif
-+#endif
- 
++
  #ifdef SITEARCH_EXP
      /* sitearch is always relative to sitelib on Windows for
-@@ -4954,6 +4961,61 @@ S_init_perllib(pTHX)
-     incpush(PERL_VENDORLIB_STEM, FALSE, TRUE, TRUE, TRUE);
+      * DLL-based path intuition to work correctly */
+@@ -4336,6 +4341,59 @@ S_init_perllib(pTHX)
+ 		      INCPUSH_ADD_OLD_VERS|INCPUSH_CAN_RELOCATE);
  #endif
  
 +#ifdef DEBIAN
-+    incpush(ARCHLIB_EXP, FALSE, FALSE, TRUE, FALSE);
-+    incpush(PRIVLIB_EXP, FALSE, FALSE, TRUE, FALSE);
-+
 +    /* Non-versioned site directory for local modules and for
 +       compatability with the previous packages' site dirs */
-+    incpush("/usr/local/lib/site_perl", TRUE, FALSE, FALSE, FALSE);
++    S_incpush_use_sep(aTHX_ STR_WITH_LEN("/usr/local/lib/site_perl"),
++		      INCPUSH_ADD_SUB_DIRS);
 +
 +#ifdef PERL_INC_VERSION_LIST
 +    {
@@ -96,14 +80,14 @@ index 94f2b13..5a6744a 100644
 +	    {
 +		strcpy(arch_vers, *p);
 +		if (PerlLIO_stat(sitearch, &s) >= 0 && S_ISDIR(s.st_mode))
-+		    incpush(sitearch, FALSE, FALSE, FALSE, FALSE);
++		    S_incpush_use_sep(aTHX_ sitearch, strlen(sitearch), 0x0);
 +	    }
 +
 +	    if (lib_vers)
 +	    {
 +		strcpy(lib_vers, *p);
 +		if (PerlLIO_stat(sitelib, &s) >= 0 && S_ISDIR(s.st_mode))
-+		    incpush(sitelib, FALSE, FALSE, FALSE, FALSE);
++		    S_incpush_use_sep(aTHX_ sitelib, strlen(sitelib), 0x0);
 +	    }
 +	}
 +    }
@@ -111,7 +95,5 @@ index 94f2b13..5a6744a 100644
 +#endif
 +
  #ifdef PERL_OTHERLIBDIRS
-     incpush(PERL_OTHERLIBDIRS, TRUE, TRUE, TRUE, TRUE);
- #endif
--- 
-tg: (daf8b46..) debian/mod_paths (depends on: upstream)
+     S_incpush_use_sep(aTHX_ STR_WITH_LEN(PERL_OTHERLIBDIRS),
+ 		      INCPUSH_ADD_OLD_VERS|INCPUSH_ADD_ARCHONLY_SUB_DIRS

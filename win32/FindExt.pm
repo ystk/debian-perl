@@ -6,8 +6,27 @@ use strict;
 use warnings;
 
 my $no = join('|',qw(GDBM_File ODBM_File NDBM_File DB_File
-                     VMS Sys-Syslog IPC-SysV I18N-Langinfo));
+                     VMS VMS-DCLsym VMS-Stdio Sys-Syslog IPC-SysV I18N-Langinfo));
 $no = qr/^(?:$no)$/i;
+
+sub apply_config {
+    my ($config) = @_;
+    my @no;
+
+    # duplicates logic from Configure (mostly)
+    push @no, "DB_File" unless $config->{i_db};
+    push @no, "GDBM_File" unless $config->{i_gdbm};
+    push @no, "I18N-Langinfo" unless $config->{i_langinfo} && $config->{i_nl_langinfo};
+    push @no, "IPC-SysV" unless $config->{d_msg} || $config->{d_sem} || $config->{d_shm};
+    push @no, "NDBM_File" unless $config->{d_ndbm};
+    push @no, "ODBM_File"
+      unless ($config->{i_dbm} || $config->{i_rpcsvcdbm}) && !$config->{d_cplusplus};
+    push @no, "VMS.*" unless $^O eq "VMS";
+    push @no, "Win32.*" unless $^O eq "MSWin32" || $^O eq "cygwin";
+
+    $no = join('|', @no);
+    $no = qr/^(?:$no)$/i;
+}
 
 my %ext;
 my %static;
@@ -19,7 +38,7 @@ sub set_static_extensions {
     # (with possible exclusions)
     %static = ();
     my @list = @_;
-    if ($_[0] eq '*') {
+    if (@_ and $_[0] eq '*') {
 	my %excl = map {$_=>1} map {m/^!(.*)$/} @_[1 .. $#_];
 	@list = grep {!exists $excl{$_}} keys %ext;
     }
@@ -63,6 +82,16 @@ sub is_static
  return $ext{$_[0]} eq 'static'
 }
 
+sub has_xs_or_c {
+    my $dir = shift;
+    opendir my $dh, $dir or die "opendir $dir: $!";
+    while (defined (my $item = readdir $dh)) {
+        return 1 if $item =~ /\.xs$/;
+        return 1 if $item =~ /\.c$/;
+    }
+    return 0;
+}
+
 # Function to find available extensions, ignoring DynaLoader
 sub find_ext
 {
@@ -78,7 +107,10 @@ sub find_ext
         $this_ext =~ s!-!/!g;
         $leaf =~ s/.*-//;
 
-        if (-f "$ext_dir$item/$leaf.xs" || -f "$ext_dir$item/$leaf.c" ) {
+	# Temporary hack to cope with smokers that are not clearing directories:
+        next if $ext{$this_ext};
+
+        if (has_xs_or_c("$ext_dir$item")) {
             $ext{$this_ext} = $static{$this_ext} ? 'static' : 'dynamic';
         } else {
             $ext{$this_ext} = 'nonxs';

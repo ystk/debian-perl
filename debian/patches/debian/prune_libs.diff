@@ -1,19 +1,23 @@
+From 063566907896ff32bea27897fa73cebbbd7bacce Mon Sep 17 00:00:00 2001
+From: Brendan O'Dea <bod@debian.org>
+Date: Fri, 18 Mar 2005 22:22:25 +1100
 Subject: Prune the list of libraries wanted to what we actually need.
+
 Bug-Debian: http://bugs.debian.org/128355
 
 We want to keep the dependencies on perl-base as small as possible,
 and some of the original list may be present on buildds (see Bug#128355).
 
-
+Patch-Name: debian/prune_libs.diff
 ---
  Configure |    5 ++---
- 1 files changed, 2 insertions(+), 3 deletions(-)
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Configure b/Configure
-index 01fa3c0..1fee5c1 100755
+index d9911f9..f59f75c 100755
 --- a/Configure
 +++ b/Configure
-@@ -1354,8 +1354,7 @@ libswanted_uselargefiles=''
+@@ -1367,8 +1367,7 @@ libswanted_uselargefiles=''
  : set usesocks on the Configure command line to enable socks.
  : List of libraries we want.
  : If anyone needs extra -lxxx, put those in a hint file.
@@ -23,7 +27,7 @@ index 01fa3c0..1fee5c1 100755
  : We probably want to search /usr/shlib before most other libraries.
  : This is only used by the lib/ExtUtils/MakeMaker.pm routine extliblist.
  glibpth=`echo " $glibpth " | sed -e 's! /usr/shlib ! !'`
-@@ -22044,7 +22043,7 @@ sunos*X4*)
+@@ -22308,7 +22307,7 @@ sunos*X4*)
      ;;
  *) case "$usedl" in
      $define|true|[yY]*)
@@ -32,5 +36,3 @@ index 01fa3c0..1fee5c1 100755
  	    shift
  	    perllibs="$*"
  	    ;;
--- 
-tg: (daf8b46..) debian/prune_libs (depends on: upstream)

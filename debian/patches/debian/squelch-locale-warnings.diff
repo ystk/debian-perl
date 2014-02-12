@@ -1,5 +1,8 @@
+From debc11ce5022136a0dca62149af3f08e1d6b70c2 Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
+Date: Sun, 3 Oct 2010 21:36:17 +0300
 Subject: Squelch locale warnings in Debian package maintainer scripts
+
 Bug-Debian: http://bugs.debian.org/508764
 
 The system locales are rather frequently out of sync with the C library
@@ -10,13 +13,14 @@ by the DPKG_RUNNING_VERSION environment variable.
 Any real locale problem will show up after the system upgrade too, and
 the warning will be triggered normally again at that point.
 
+Patch-Name: debian/squelch-locale-warnings.diff
 ---
  locale.c           |    4 ++++
  pod/perllocale.pod |    8 ++++++++
- 2 files changed, 12 insertions(+), 0 deletions(-)
+ 2 files changed, 12 insertions(+)
 
 diff --git a/locale.c b/locale.c
-index f7cb79c..56fa34d 100644
+index 4631b86..94a0962 100644
 --- a/locale.c
 +++ b/locale.c
 @@ -359,6 +359,10 @@ Perl_init_i18nl10n(pTHX_ int printwarn)
@@ -31,10 +35,10 @@ index f7cb79c..56fa34d 100644
  
  	if (locwarn) {
 diff --git a/pod/perllocale.pod b/pod/perllocale.pod
-index 3c2b3ab..17c6d40 100644
+index 8926d8b..6c55889 100644
 --- a/pod/perllocale.pod
 +++ b/pod/perllocale.pod
-@@ -844,6 +844,14 @@ B<NOTE>: PERL_BADLANG only gives you a way to hide the warning message.
+@@ -861,6 +861,14 @@ B<NOTE>: PERL_BADLANG only gives you a way to hide the warning message.
  The message tells about some problem in your system's locale support,
  and you should investigate what the problem is.
  
@@ -49,5 +53,3 @@ index 3c2b3ab..17c6d40 100644
  =back
  
  The following environment variables are not specific to Perl: They are
--- 
-tg: (daf8b46..) debian/squelch-locale-warnings (depends on: upstream)

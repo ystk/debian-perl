@@ -1,16 +1,21 @@
+From 55a718425dc4612ac01850ef786f75f072b20b9e Mon Sep 17 00:00:00 2001
+From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 8 Sep 2008 20:48:14 +0300
 Subject: Disable some threads tests on m68k for now due to missing TLS.
-Closes: #495826, #517938
 
+Bug-Debian: http://bugs.debian.org/495826
+Bug-Debian: http://bugs.debian.org/517938
 
+Patch-Name: debian/m68k_thread_stress.diff
 ---
- ext/threads-shared/t/stress.t    |    4 ++++
- ext/threads-shared/t/waithires.t |    6 ++++++
- 2 files changed, 10 insertions(+), 0 deletions(-)
+ dist/threads-shared/t/stress.t    |    4 ++++
+ dist/threads-shared/t/waithires.t |    6 ++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/ext/threads-shared/t/stress.t b/ext/threads-shared/t/stress.t
-index e36ab0a..eb591ff 100755
---- a/ext/threads-shared/t/stress.t
-+++ b/ext/threads-shared/t/stress.t
+diff --git a/dist/threads-shared/t/stress.t b/dist/threads-shared/t/stress.t
+index 652a3e6..2f1b576 100644
+--- a/dist/threads-shared/t/stress.t
++++ b/dist/threads-shared/t/stress.t
 @@ -11,6 +11,10 @@ BEGIN {
          print("1..0 # SKIP Broken under HP-UX 10.20\n");
          exit(0);
@@ -22,10 +27,10 @@ index e36ab0a..eb591ff 100755
  }
  
  use ExtUtils::testlib;
-diff --git a/ext/threads-shared/t/waithires.t b/ext/threads-shared/t/waithires.t
-index ae82448..e17c471 100755
---- a/ext/threads-shared/t/waithires.t
-+++ b/ext/threads-shared/t/waithires.t
+diff --git a/dist/threads-shared/t/waithires.t b/dist/threads-shared/t/waithires.t
+index 3c3e852..349c5b4 100644
+--- a/dist/threads-shared/t/waithires.t
++++ b/dist/threads-shared/t/waithires.t
 @@ -16,6 +16,12 @@ BEGIN {
      if (! eval 'use Time::HiRes "time"; 1') {
          Test::skip_all('Time::HiRes not available');
@@ -39,5 +44,3 @@ index ae82448..e17c471 100755
  }
  
  use ExtUtils::testlib;
--- 
-tg: (daf8b46..) debian/m68k_thread_stress (depends on: upstream)

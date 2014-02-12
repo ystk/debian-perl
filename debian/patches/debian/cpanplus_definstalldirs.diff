@@ -1,22 +1,27 @@
+From 43e79995e19b9e9b0f76295232087d1ea23f9b9c Mon Sep 17 00:00:00 2001
 From: Niko Tyni <ntyni@debian.org>
+Date: Mon, 6 Jul 2009 21:58:41 +0300
 Subject: Configure CPANPLUS to use the site directories by default.
-Closes: 533707
-    
+
+Bug-Debian: http://bugs.debian.org/533707
+
 The core modules usually default to INSTALLDIRS=perl (ExtUtils::MakeMaker)
 or installdirs=core (Module::Build), so we need to explicitly ask for
 the site destination to get upgraded versions into /usr/local.
 
 See also the sister patch, debian/cpan_definstalldirs .
 
+Patch-Name: debian/cpanplus_definstalldirs.diff
 ---
- lib/CPANPLUS/Config/System.pm |   30 ++++++++++++++++++++++++++++++
- 1 files changed, 30 insertions(+), 0 deletions(-)
+ cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm |   30 +++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
 
-diff --git a/lib/CPANPLUS/Config/System.pm b/lib/CPANPLUS/Config/System.pm
+diff --git a/cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm b/cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
 new file mode 100644
 index 0000000..5e6e11e
 --- /dev/null
-+++ b/lib/CPANPLUS/Config/System.pm
++++ b/cpan/CPANPLUS/lib/CPANPLUS/Config/System.pm
 @@ -0,0 +1,30 @@
 +### minimal pod, so you can find it with perldoc -l, etc
 +=pod
@@ -48,5 +53,3 @@ index 0000000..5e6e11e
 +}
 +
 +1;
--- 
-tg: (daf8b46..) debian/cpanplus_definstalldirs (depends on: upstream)
