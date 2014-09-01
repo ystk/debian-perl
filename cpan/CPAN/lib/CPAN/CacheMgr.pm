@@ -49,6 +49,7 @@ sub tidyup {
     $self->_clean_cache($toremove);
     return if $CPAN::Signal;
   }
+  $self->{FIFO} = [];
 }
 
 #-> sub CPAN::CacheMgr::dir ;
@@ -171,7 +172,7 @@ sub _clean_cache {
             } elsif (my $id = $peek_yaml->[0]{distribution}{ID}) {
                 $CPAN::META->delete("CPAN::Distribution", $id);
 
-                # XXX we should restore the state NOW, otherise this
+                # XXX we should restore the state NOW, otherwise this
                 # distro does not exist until we read an index. BUG ALERT(?)
 
                 # $CPAN::Frontend->mywarn (" +++\n");
