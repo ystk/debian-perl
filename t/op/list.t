@@ -6,7 +6,7 @@ BEGIN {
 }
 
 require "test.pl";
-plan( tests => 63 );
+plan( tests => 65 );
 
 @foo = (1, 2, 3, 4);
 cmp_ok($foo[0], '==', 1, 'first elem');
@@ -175,3 +175,18 @@ cmp_ok(join('',(1,2),3,(4,5)),'eq','12345','list (..).(..)');
     my @b = qw();
     is($#b, -1);
 }
+
+{
+    # comma operator with lvalue only propagates the lvalue context to
+    # the last operand.
+    ("const", my $x) ||= 1;
+    is( $x, 1 );
+}
+
+# [perl #78194] list slice aliasing op return values
+sub {
+ is(\$_[0], \$_[1],
+  '[perl #78194] \$_[0] == \$_[1] when @_ aliases elems repeated by lslice'
+ )
+}
+ ->(("${\''}")[0,0]);

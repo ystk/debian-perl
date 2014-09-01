@@ -87,6 +87,8 @@ if which dpkg-buildflags >/dev/null 2>&1; then
     ldflags="$ldflags $(dpkg-buildflags --get LDFLAGS)"
 fi
 
+archtriplet=`dpkg-architecture -qDEB_HOST_MULTIARCH`
+
 # post-configure tweaks
 cp debian/config.over .
 
@@ -101,13 +103,13 @@ eval /bin/bash Configure			\
     -Darchname=$gnu_type			\
     -Dprefix=/usr				\
     -Dprivlib=/usr/share/perl/$ver		\
-    -Darchlib=/usr/lib/perl/$ver		\
+    -Darchlib=/usr/lib/$archtriplet/perl/$ver		\
     -Dvendorprefix=/usr				\
     -Dvendorlib=/usr/share/perl5		\
-    -Dvendorarch=/usr/lib/perl5			\
+    -Dvendorarch=/usr/lib/$archtriplet/perl5/$ver			\
     -Dsiteprefix=/usr/local			\
     -Dsitelib=/usr/local/share/perl/$fullver	\
-    -Dsitearch=/usr/local/lib/perl/$fullver	\
+    -Dsitearch=/usr/local/lib/$archtriplet/perl/$fullver	\
     -Dman1dir=/usr/share/man/man1		\
     -Dman3dir=/usr/share/man/man3		\
     -Dsiteman1dir=/usr/local/man/man1		\
@@ -122,7 +124,8 @@ eval /bin/bash Configure			\
     -Uusesfio					\
     -Uusenm					\
     -Ui_libutil					\
+    -Uversiononly \
     -DDEBUGGING=$debugging			\
     -Doptimize=\"$optimize\"			\
     $extra_path					\
-    $opts -des
+    $opts -des \
