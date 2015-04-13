@@ -2617,6 +2617,11 @@ PP(pp_ssockopt)
 	len = SvCUR(sv);
 	if (PerlSock_getsockopt(fd, lvl, optname, SvPVX(sv), &len) < 0)
 	    goto nuts2;
+#if defined(_AIX)
+        /* XXX Configure test: does getsockopt set the length properly? */
+        if (len == 256)
+            len = sizeof(int);
+#endif
 	SvCUR_set(sv, len);
 	*SvEND(sv) ='\0';
 	PUSHs(sv);
@@ -4455,11 +4460,16 @@ PP(pp_gmtime)
     }
     else {
 	NV input = Perl_floor(POPn);
+	const bool pl_isnan = Perl_isnan(input);
 	when = (Time64_T)input;
-	if (when != input) {
+	if (UNLIKELY(pl_isnan || when != input)) {
 	    /* diag_listed_as: gmtime(%f) too large */
 	    Perl_ck_warner(aTHX_ packWARN(WARN_OVERFLOW),
 			   "%s(%.0" NVff ") too large", opname, input);
+	    if (pl_isnan) {
+		err = NULL;
+		goto failed;
+	    }
 	}
     }
 
@@ -4483,30 +4493,30 @@ PP(pp_gmtime)
     }
 
     if (err == NULL) {
+	/* diag_listed_as: gmtime(%f) failed */
 	/* XXX %lld broken for quads */
+      failed:
 	Perl_ck_warner(aTHX_ packWARN(WARN_OVERFLOW),
 		       "%s(%.0" NVff ") failed", opname, when);
     }
 
     if (GIMME != G_ARRAY) {	/* scalar context */
-	SV *tsv;
-	/* XXX newSVpvf()'s %lld type is broken, so cheat with a double */
-	double year = (double)tmbuf.tm_year + 1900;
-
         EXTEND(SP, 1);
         EXTEND_MORTAL(1);
 	if (err == NULL)
 	    RETPUSHUNDEF;
-
-	tsv = Perl_newSVpvf(aTHX_ "%s %s %2d %02d:%02d:%02d %.0f",
-			    dayname[tmbuf.tm_wday],
-			    monname[tmbuf.tm_mon],
-			    tmbuf.tm_mday,
-			    tmbuf.tm_hour,
-			    tmbuf.tm_min,
-			    tmbuf.tm_sec,
-			    year);
-	mPUSHs(tsv);
+       else {
+           mPUSHs(Perl_newSVpvf(aTHX_ "%s %s %2d %02d:%02d:%02d %.0f",
+                                dayname[tmbuf.tm_wday],
+                                monname[tmbuf.tm_mon],
+                                tmbuf.tm_mday,
+                                tmbuf.tm_hour,
+                                tmbuf.tm_min,
+                                tmbuf.tm_sec,
+                                /* XXX newSVpvf()'s %lld type is broken,
+                                 * so cheat with a double */
+                                (double)tmbuf.tm_year + 1900));
+        }
     }
     else {			/* list context */
 	if ( err == NULL )

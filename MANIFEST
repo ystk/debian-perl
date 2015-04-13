@@ -234,11 +234,17 @@ cpan/Compress-Raw-Zlib/zlib-src/zlib.h		Compress::Raw::Zlib
 cpan/Compress-Raw-Zlib/zlib-src/zutil.c		Compress::Raw::Zlib
 cpan/Compress-Raw-Zlib/zlib-src/zutil.h		Compress::Raw::Zlib
 cpan/Compress-Raw-Zlib/Zlib.xs			Compress::Raw::Zlib
-cpan/Config-Perl-V/t/00_pod.t			Config::Perl::V
-cpan/Config-Perl-V/t/01_pod.t			Config::Perl::V
 cpan/Config-Perl-V/t/10_base.t			Config::Perl::V
-cpan/Config-Perl-V/t/20_plv510.t		Config::Perl::V
-cpan/Config-Perl-V/t/21_plv518.t		Config::Perl::V
+cpan/Config-Perl-V/t/20_plv56.t			Config::Perl::V
+cpan/Config-Perl-V/t/21_plv58.t			Config::Perl::V
+cpan/Config-Perl-V/t/22_plv510.t		Config::Perl::V
+cpan/Config-Perl-V/t/23_plv512.t		Config::Perl::V
+cpan/Config-Perl-V/t/24_plv514.t		Config::Perl::V
+cpan/Config-Perl-V/t/25_plv5162.t		Config::Perl::V
+cpan/Config-Perl-V/t/25_plv516.t		Config::Perl::V
+cpan/Config-Perl-V/t/26_plv5182.t		Config::Perl::V
+cpan/Config-Perl-V/t/26_plv518.t		Config::Perl::V
+cpan/Config-Perl-V/t/27_plv5200.t		Config::Perl::V
 cpan/Config-Perl-V/V.pm				Config::Perl::V
 cpan/CPAN/lib/App/Cpan.pm		helper package for CPAN.pm
 cpan/CPAN/lib/CPAN/API/HOWTO.pod		recipe book for programming with CPAN.pm
@@ -2988,6 +2994,7 @@ dist/Data-Dumper/t/perl-74170.t	Regression test for stack reallocation
 dist/Data-Dumper/t/purity_deepcopy_maxdepth.t	See if three Data::Dumper functions work
 dist/Data-Dumper/t/qr.t		See if Data::Dumper works with qr|/|
 dist/Data-Dumper/t/quotekeys.t	See if Data::Dumper::Quotekeys works
+dist/Data-Dumper/t/recurse.t	See if Data::Dumper::Maxrecurse works
 dist/Data-Dumper/t/seen.t	See if Data::Dumper::Seen works
 dist/Data-Dumper/t/sortkeys.t	See if Data::Dumper::Sortkeys works
 dist/Data-Dumper/t/sparseseen.t	See if Data::Dumper::Sparseseen works
@@ -4592,6 +4599,9 @@ pod/perl5163delta.pod		Perl changes in version 5.16.3
 pod/perl5180delta.pod		Perl changes in version 5.18.0
 pod/perl5181delta.pod		Perl changes in version 5.18.1
 pod/perl5182delta.pod		Perl changes in version 5.18.2
+pod/perl5184delta.pod		Perl changes in version 5.18.4
+pod/perl5200delta.pod		Perl changes in version 5.20.0
+pod/perl5201delta.pod		Perl changes in version 5.20.1
 pod/perl561delta.pod		Perl changes in version 5.6.1
 pod/perl56delta.pod		Perl changes in version 5.6
 pod/perl581delta.pod		Perl changes in version 5.8.1
@@ -4687,6 +4697,7 @@ pod/perltooc.pod
 pod/perltoot.pod		
 pod/perltrap.pod		Perl traps for the unwary
 pod/perlunicode.pod		Perl Unicode support
+pod/perlunicook.pod		Perl Unicode cookbook
 pod/perlunifaq.pod		Perl Unicode FAQ
 pod/perluniintro.pod		Perl Unicode introduction
 pod/perlunitut.pod		Perl Unicode tutorial
@@ -5425,6 +5436,7 @@ t/re/reg_nc_tie.t		Test the tied methods of Tie::Hash::NamedCapture
 t/re/reg_pmod.t			See if regexp /p modifier works as expected
 t/re/reg_posixcc.t		See if posix character classes behave consistently
 t/re/re_tests			Regular expressions for regexp.t
+t/re/rt122747.t			Test rt122747 assert faile (requires DEBUGGING)
 t/re/rxcode.t			See if /(?{ code })/ works
 t/re/subst_amp.t		See if $&-related substitution works
 t/re/subst.t			See if substitution works

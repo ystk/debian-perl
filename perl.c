@@ -677,7 +677,7 @@ perl_destruct(pTHXx)
 		msg.msg_name = NULL;
 		msg.msg_namelen = 0;
 		msg.msg_iov = vec;
-		msg.msg_iovlen = sizeof(vec)/sizeof(vec[0]);
+		msg.msg_iovlen = C_ARRAY_LENGTH(vec);
 
 		vec[0].iov_base = (void*)&target;
 		vec[0].iov_len = sizeof(target);
@@ -2925,7 +2925,7 @@ Perl_eval_sv(pTHX_ SV *sv, I32 flags)
 /*
 =for apidoc p||eval_pv
 
-Tells Perl to C<eval> the given string and return an SV* result.
+Tells Perl to C<eval> the given string in scalar context and return an SV* result.
 
 =cut
 */
@@ -3514,7 +3514,7 @@ S_minus_v(pTHX)
 #endif
 
 	PerlIO_printf(PIO_stdout,
-		      "\n\nCopyright 1987-2014, Larry Wall\n");
+		      "\n\nCopyright 1987-2015, Larry Wall\n");
 #ifdef MSDOS
 	PerlIO_printf(PIO_stdout,
 		      "\nMS-DOS port Copyright (c) 1989, 1990, Diomidis Spinellis\n");
