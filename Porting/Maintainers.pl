@@ -233,9 +233,13 @@ use File::Glob qw(:case);
     },
 
     'Config::Perl::V' => {
-        'DISTRIBUTION' => 'HMBRAND/Config-Perl-V-0.20.tgz',
+        'DISTRIBUTION' => 'HMBRAND/Config-Perl-V-0.22.tgz',
         'FILES'        => q[cpan/Config-Perl-V],
-        'EXCLUDED'     => ['examples/show-v.pl'],
+        'EXCLUDED'     => [qw(
+		examples/show-v.pl
+		t/00_pod.t
+		t/01_pod.t
+		)],
     },
 
     'constant' => {
@@ -284,6 +288,18 @@ use File::Glob qw(:case);
                 t/local_utils.pm
                 t/perlcriticrc
                 t/yaml_code.yml
+                ),
+        ],
+        # Waiting to be merged upstream: see pull request #83
+        'CUSTOMIZED'   => [
+            qw( lib/CPAN/Author.pm
+                lib/CPAN/CacheMgr.pm
+                lib/CPAN/FTP.pm
+                lib/CPAN/HTTP/Client.pm
+                lib/CPAN/HandleConfig.pm
+                lib/CPAN/Index.pm
+                lib/CPAN/LWP/UserAgent.pm
+                lib/CPAN/Mirrors.pm
                 ),
         ],
     },
@@ -944,6 +960,8 @@ use File::Glob qw(:case);
     'Pod::Parser' => {
         'DISTRIBUTION' => 'MAREKR/Pod-Parser-1.62.tar.gz',
         'FILES'        => q[cpan/Pod-Parser],
+        # Waiting to be merged upstream: see CPAN RT#101847
+        'CUSTOMIZED'   => [ qw( lib/Pod/PlainText.pm) ],
     },
 
     'Pod::Perldoc' => {
@@ -1289,7 +1307,7 @@ use File::Glob qw(:case);
     },
 
     'version' => {
-        'DISTRIBUTION' => 'JPEACOCK/version-0.9908.tar.gz',
+        'DISTRIBUTION' => 'JPEACOCK/version-0.9909.tar.gz',
         'FILES'        => q[cpan/version vutil.c vutil.h vxs.inc],
         'EXCLUDED' => [
             qr{^vutil/lib/},
@@ -1304,11 +1322,6 @@ use File::Glob qw(:case);
         # only necessary with the CPAN release.
         'CUSTOMIZED'   => [
             qw( lib/version.pm
-                ),
-
-            # Merged upstream, waiting for new CPAN release: see CPAN RT#92721
-            qw( vutil.c
-                vxs.inc
                 ),
         ],
 

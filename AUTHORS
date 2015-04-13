@@ -48,6 +48,7 @@ Albert Chin-A-Young		<china@thewrittenword.com>
 Albert Dvornik			<bert@alum.mit.edu>
 Alberto Simões			<ambs@cpan.org>
 Alessandro Forghieri		<alf@orion.it>
+Alexandre (Midnite) Jousset		<mid@gtmp.org>
 Alexander Alekseev		<alex@alemate.ru>
 Alexander Hartmaier		<abraxxa@cpan.org>
 Alexander Voronov		<alexander-voronov@yandex.ru>
@@ -78,12 +79,14 @@ Andreas Klussmann		<andreas@infosys.heitec.de>
 Andreas König			<a.koenig@mind.de>
 Andreas Marienborg		<andreas.marienborg@gmail.com>
 Andreas Schwab			<schwab@suse.de>
+Andreas Voegele			<andreas@andreasvoegele.com>
 Andrei Yelistratov		<andrew@sundale.net>
 Andrej Borsenkow		<Andrej.Borsenkow@mow.siemens.ru>
 Andrew Bettison			<andrewb@zip.com.au>
 Andrew Burt			<aburt@isis.cs.du.edu>
 Andrew Cohen			<cohen@andy.bu.edu>
 andrew deryabin			<djsf@technarchy.ru>
+Andrew Fresh			<afresh1@openbsd.org>
 Andrew Hamm			<AHamm@civica.com.au>
 Andrew M. Langmead		<aml@world.std.com>
 Andrew Pimlott			<pimlott@idiomtech.com>
@@ -99,6 +102,7 @@ Andy Dougherty			<doughera@lafayette.edu>
 Andy Lester			<andy@petdance.com>
 Anno Siegel			<anno4000@lublin.zrz.tu-berlin.de>
 Anthony David			<adavid@netinfo.com.au>
+Anthony Heading			<anthony@ajrh.net>
 Anton Berezin			<tobez@tobez.org>
 Anton Nikishaev			<me@lelf.lu>
 Anton Tagunov			<tagunov@motor.ru>
@@ -339,6 +343,7 @@ Dominic Dunlop			<domo@computer.org>
 Dominic Hargreaves		<dom@earth.li>
 Dominique Dumont		<Dominique_Dumont@grenoble.hp.com>
 Dominique Quatravaux
+Doug Bell			<madcityzen@gmail.com>
 Doug Campbell			<soup@ampersand.com>
 Doug MacEachern			<dougm@covalent.net>
 Douglas Christopher Wilson	<doug@somethingdoug.com>
@@ -353,6 +358,7 @@ Duke Leto			<jonathan@leto.net>
 Duncan Findlay			<duncf@debian.org>
 E. Choroba			<choroba@weed.(none)>
 Ed Avis				<eda@waniasset.com>
+Ed J				<etj@cpan.org>
 Ed Mooring			<mooring@Lynx.COM>
 Ed Santiago			<esm@pobox.com>
 Eddy Tan			<eddy.net@gmail.com>
@@ -419,6 +425,7 @@ Gerrit P. Haase			<gp@familiehaase.de>
 Gideon Israel Dsouza		<gideon@cpan.org>
 Giles Lean			<giles@nemeton.com.au>
 Gisle Aas			<gisle@aas.no>
+Glenn D. Golden			<gdg@zplane.com>
 Glenn Linderman			<perl@nevcal.com>
 Gordon Lack			<gml4410@ggr.co.uk>
 Gordon J. Miller		<gjm@cray.com>
@@ -580,6 +587,7 @@ Joergen Haegg
 Johan Holtman
 Johan Vromans			<jvromans@squirrel.nl>
 Johann Klasek			<jk@auto.tuwien.ac.at>
+Johann 'Myrkraverk' Oskarsson			<johann@myrkraverk.com>
 Johannes Plunien		<plu@pqpq.de>
 John Bley			<jbb6@acpub.duke.edu>
 John Borwick			<jhborwic@unity.ncsu.edu>
@@ -803,6 +811,7 @@ Max Maischein			<corion@corion.net>
 Merijn Broeren			<merijnb@iloquent.nl>
 Michael A Chase			<mchase@ix.netcom.com>
 Michael Breen			<perl@mbreen.com>
+Michael Bunk			<bunk@iat.uni-leipzig.de>
 Michael Carman			<mjcarman@home.com>
 Michael Cook			<mcook@cognex.com>
 Michael Cummings		<mcummings@gentoo.org>
@@ -1117,6 +1126,7 @@ Sullivan Beck			<sbeck@cpan.org>
 Sven Strickroth			<sven.strickroth@tu-clausthal.de>
 Sven Verdoolaege		<skimo@breughel.ufsia.ac.be>
 SynaptiCAD, Inc.		<sales@syncad.com>
+Tadeusz Sośnierz		<tadeusz.sosnierz@onet.pl>
 Takis Psarogiannakopoulos	<takis@xfree86.org>
 Taro KAWAGISHI
 Tassilo von Parseval		<tassilo.parseval@post.rwth-aachen.de>
@@ -1150,7 +1160,7 @@ Tkil				<tkil@reptile.scrye.com>
 Tobias Leich			<email@froggs.de>
 Toby Inkster			<mail@tobyinkster.co.uk>
 Todd C. Miller			<Todd.Miller@courtesan.com>
-Todd Rinaldo			<toddr@cpanel.net>
+Todd Rinaldo			<toddr@cpan.org>
 Todd T. Fries			<todd@fries.int.mrleng.com>
 Todd Vierling			<tv@duh.org>
 Tokuhiro Matsuno		<tokuhirom@gmail.com>
@@ -1190,6 +1200,7 @@ Vincent Pit			<perl@profvince.com>
 Vishal Bhatia			<vishal@deja.com>
 Vlad Harchev			<hvv@hippo.ru>
 Vladimir Alexiev		<vladimir@cs.ualberta.ca>
+Vladimir Marek			<vlmarek@volny.cz>
 Vladimir Timofeev		<vovkasm@gmail.com>
 Volker Schatz			<perldoc@volkerschatz.com>
 W. Geoffrey Rommel		<grommel@sears.com>

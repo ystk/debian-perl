@@ -4806,7 +4806,7 @@ PerlIO_printf(Perl_debug_log, "LHS=%"UVdf" RHS=%"UVdf"\n",
 	    min++;
 	    if (flags & SCF_DO_STCLASS) {
                 bool invert = 0;
-                SV* my_invlist = sv_2mortal(_new_invlist(0));
+                SV* my_invlist = NULL;
                 U8 namedclass;
 
                 /* See commit msg 749e076fceedeb708a624933726e7989f2302f6a */
@@ -4905,7 +4905,7 @@ PerlIO_printf(Perl_debug_log, "LHS=%"UVdf" RHS=%"UVdf"\n",
                     /* FALL THROUGH */
 		case POSIXA:
                     if (FLAGS(scan) == _CC_ASCII) {
-                        my_invlist = PL_XPosix_ptrs[_CC_ASCII];
+                        my_invlist = invlist_clone(PL_XPosix_ptrs[_CC_ASCII]);
                     }
                     else {
                         _invlist_intersection(PL_XPosix_ptrs[FLAGS(scan)],
@@ -4942,6 +4942,7 @@ PerlIO_printf(Perl_debug_log, "LHS=%"UVdf" RHS=%"UVdf"\n",
                         assert(flags & SCF_DO_STCLASS_OR);
                         ssc_union(data->start_class, my_invlist, invert);
                     }
+                    SvREFCNT_dec(my_invlist);
 		}
 		if (flags & SCF_DO_STCLASS_OR)
 		    ssc_and(pRExC_state, data->start_class, (regnode_charclass *) and_withp);
@@ -5046,8 +5047,11 @@ PerlIO_printf(Perl_debug_log, "LHS=%"UVdf" RHS=%"UVdf"\n",
 			 */
 			ssc_init(pRExC_state, data->start_class);
 		    }  else {
-			/* AND before and after: combine and continue */
+                        /* AND before and after: combine and continue.  These
+                         * assertions are zero-length, so can match an EMPTY
+                         * string */
 			ssc_and(pRExC_state, data->start_class, (regnode_charclass *) &intrnl);
+                        ANYOF_FLAGS(data->start_class) |= ANYOF_EMPTY_STRING;
 		    }
                 }
 	    }
@@ -5119,6 +5123,7 @@ PerlIO_printf(Perl_debug_log, "LHS=%"UVdf" RHS=%"UVdf"\n",
 
                 if (f & SCF_DO_STCLASS_AND) {
                     ssc_and(pRExC_state, data->start_class, (regnode_charclass *) &intrnl);
+                    ANYOF_FLAGS(data->start_class) |= ANYOF_EMPTY_STRING;
                 }
                 if (data) {
                     if (data_fake.flags & (SF_HAS_PAR|SF_IN_PAR))
@@ -10972,10 +10977,16 @@ S_alloc_maybe_populate_EXACT(pTHX_ RExC_state_t *pRExC_state,
                           EBCDIC, but it works there, as the extra invariants
                           fold to themselves) */
                     *character = toFOLD((U8) code_point);
-                    if (downgradable
-                        && *character == code_point
-                        && ! HAS_NONLATIN1_FOLD_CLOSURE(code_point))
-                    {
+
+                    /* We can downgrade to an EXACT node if this character
+                     * isn't a folding one.  Note that this assumes that
+                     * nothing above Latin1 folds to some other invariant than
+                     * one of these alphabetics; otherwise we would also have
+                     * to check:
+                     *  && (! HAS_NONLATIN1_FOLD_CLOSURE(code_point)
+                     *      || ASCII_FOLD_RESTRICTED))
+                     */
+                    if (downgradable && PL_fold[code_point] == code_point) {
                         OP(node) = EXACT;
                     }
                 }
@@ -11990,7 +12001,17 @@ tryagain:
                         && is_PROBLEMATIC_LOCALE_FOLD_cp(ender)))
                 {
                     if (UTF) {
-                        const STRLEN unilen = reguni(pRExC_state, ender, s);
+
+                        /* Normally, we don't need the representation of the
+                         * character in the sizing pass--just its size, but if
+                         * folding, we have to actually put the character out
+                         * even in the sizing pass, because the size could
+                         * change as we juggle things at the end of this loop
+                         * to avoid splitting a too-full node in the middle of
+                         * a potential multi-char fold [perl #123539] */
+                        const STRLEN unilen = (SIZE_ONLY && ! FOLD)
+                                               ? UNISKIP(ender)
+                                               : (uvchr_to_utf8((U8*)s, ender) - (U8*)s);
                         if (unilen > 0) {
                            s   += unilen;
                            len += unilen;
@@ -12002,6 +12023,10 @@ tryagain:
                          * be the correct final value, so subtract one to
                          * cancel out the increment that follows */
                         len--;
+                    }
+                    else if (FOLD) {
+                        /* See comment above for [perl #123539] */
+                        *(s++) = (char) ender;
                     }
                     else {
                         REGC((char)ender, s++);
@@ -14662,7 +14687,8 @@ parseit:
      * at compile time.  Besides not inverting folded locale now, we can't
      * invert if there are things such as \w, which aren't known until runtime
      * */
-    if (invert
+    if (cp_list
+        && invert
         && ! (ANYOF_FLAGS(ret) & (ANYOF_LOCALE_FLAGS))
 	&& ! depends_list
 	&& ! HAS_NONLOCALE_RUNTIME_PROPERTY_DEFINITION)
@@ -16552,12 +16578,12 @@ S_put_latin1_charclass_innards(pTHX_ SV *sv, char *bitmap)
     PERL_ARGS_ASSERT_PUT_LATIN1_CHARCLASS_INNARDS;
 
     for (i = 0; i < 256; i++) {
-        if (i < 256 && BITMAP_TEST((U8 *) bitmap,i)) {
+        if (BITMAP_TEST((U8 *) bitmap,i)) {
 
             /* The character at index i should be output.  Find the next
              * character that should NOT be output */
             int j;
-            for (j = i + 1; j <= 256; j++) {
+            for (j = i + 1; j < 256; j++) {
                 if (! BITMAP_TEST((U8 *) bitmap, j)) {
                     break;
                 }

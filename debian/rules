@@ -139,12 +139,22 @@ install-stamp: build-stamp
 	    -e 's/^(man3ext=).*/$$1'\''3pm'\''/;' \
 		$(lib)/Config.pm $(lib)/Config_heavy.pl
 
+	# rip away CGI::Fast, which has a separate source package now
+	rm -f $(share)/CGI/Fast.pm $(man)/man3/CGI::Fast.3perl
+
 ifeq (,$(perlabi))
 else
 	# add \$Config{debian_abi}
 	sed -i -e "/version =>/i\    debian_abi => '$(perlabi)'," \
 		$(lib)/Config.pm
 endif
+
+	# avoid exposing the point release in libperl names, to
+	# avoid unnecessary breakage
+	# see #759989
+	./perl.static -i -p \
+	    -e 's/^(libperl='\''libperl\.so)\.$(fullversion)'\''/$$1.$(version)'\''/' \
+		$(lib)/Config.pm $(lib)/Config_heavy.pl
 
 	# remove dpkg-buildflags effects from %Config
 	# see #657853
@@ -370,16 +380,6 @@ endif
 	ln $(build)/perl-base/usr/bin/perl \
 	    $(build)/perl-base/usr/bin/perl$(fullversion)
 
-
-	# fixperms
-	find $(build) -print | xargs -r chown -h root:root
-	find $(build) -type d -print | xargs -r chmod 755
-	find $(build) -type f -print | xargs -r chmod go=rX,u+rw,a-s
-	find $(build)/*/usr/bin -type f -print | xargs -r chmod a+x
-	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs -r chmod a-x
-	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
-	    -print | xargs -r chmod 644
-
 	# links
 	mkdir -p $(build)/perl-debug/usr/share/man/man1
 
@@ -390,8 +390,15 @@ endif
 	ln -s perlbug.1.gz $(build)/perl/usr/share/man/man1/perlthanks.1.gz
 
 	ln -s changelog.gz $(build)/perl/usr/share/doc/perl/Changes.gz
-	ln -s ../perl/changelog.gz \
-	    $(build)/libcgi-fast-perl/usr/share/doc/libcgi-fast-perl/changelog.gz
+
+	# fixperms
+	find $(build) -print | xargs -r chown -h root:root
+	find $(build) -type d -print | xargs -r chmod 755
+	find $(build) -type f -print | xargs -r chmod go=rX,u+rw,a-s
+	find $(build)/*/usr/bin -type f -print | xargs -r chmod a+x
+	find $(build)/*/usr/lib -type f -name \*.so\* -print | xargs -r chmod a-x
+	find $(build)/*/usr/share/doc $(build)/*/usr/share/man -type f \
+	    -print | xargs -r chmod 644
 
 	touch $@
 
@@ -414,6 +421,7 @@ binary-indep: build-stamp install-stamp
 	    done; \
 	    test -d $(build)/$$p/etc && find $(build)/$$p/etc -type f \
 		-printf '/etc/%P\n' >$(build)/$$p/DEBIAN/conffiles; \
+	    chmod 644 $(build)/$$p/DEBIAN/conffiles; \
 	    (cd $(build)/$$p; find usr -type f -print | xargs -r md5sum) \
 		>$(build)/$$p/DEBIAN/md5sums; \
 	    chmod 644 $(build)/$$p/DEBIAN/md5sums; \

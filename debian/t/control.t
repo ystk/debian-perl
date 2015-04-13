@@ -39,6 +39,9 @@ my %ok = (
        "libmodule-corelist-perl" => {
                "3.10" => "3.10",
        },
+       "libfile-spec-perl" => {
+               "3.48_01" => "3.4801",
+       },
 );
 
 # list special cases where a Breaks entry doesn't need to imply
@@ -58,6 +61,13 @@ my %special_modules = (
 	"libscalar-list-utils-perl" => "List::Util",
 );
 
+# list special cases where we're not providing a dual-lived module from
+# core even though Module::CoreList says we are. Arguably we should
+# patch our Module::CoreList, but that module probably works better as a
+# reference point than something which matches the Debian view of the world.
+my %not_in_debian_core = (
+    "libcgi-fast-perl" => 1,
+);
 
 use Test::More;
 use Module::CoreList;
@@ -187,6 +197,7 @@ for my $module (keys %$corelist) {
 	my $package = $cpan_from_debian_guess{$module};
 	next if grep $deps_found{$_}{$breaksname}{$package}, keys %deps_found;
 	next if $is_perl_binary{$package};
+	next if $not_in_debian_core{$package};
 	push @found_in_archive, $package
 		if exists $apt->{$package}
 		&& exists $apt->{$package}{VersionList};

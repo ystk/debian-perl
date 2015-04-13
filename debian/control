@@ -3,7 +3,7 @@ Section: perl
 Priority: standard
 Maintainer: Niko Tyni <ntyni@debian.org>
 Uploaders: Dominic Hargreaves <dom@earth.li>
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Homepage: http://dev.perl.org/perl5/
 Build-Depends: file, cpio, libdb-dev, libgdbm-dev, netbase [!hurd-any],
  procps [!hurd-any], zlib1g-dev | libz-dev, libbz2-dev, dpkg-dev (>= 1.16.0),
@@ -15,14 +15,16 @@ Package: perl-base
 Essential: yes
 Priority: required
 Architecture: any
-Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.14.20)
+Pre-Depends: ${shlibs:Depends}, dpkg (>= 1.17.17)
 Conflicts: safe-rm (<< 0.8),
  update-inetd (<< 4.41),
  defoma (<< 0.11.12),
  doc-base (<< 0.10.3),
  mono-gac (<< 2.10.8.1-3),
 Breaks: autoconf2.13 (<< 2.13-45),
- libfile-spec-perl (<< 3.4700),
+ perl (<< 5.20.0~),
+ pdl (<< 1:2.007-4),
+ libfile-spec-perl (<< 3.4801),
  libxsloader-perl (<< 0.17),
  libmarc-charset-perl (<< 1.2),
  libsocket-perl (<< 2.013),
@@ -32,16 +34,22 @@ Breaks: autoconf2.13 (<< 2.13-45),
  libanyevent-perl (<< 7.070-2),
  libjcode-perl (<< 2.13-3),
  libgtk2-perl-doc (<< 2:1.2491-4),
+ libfile-temp-perl (<< 0.2304),
+ libfile-path-perl (<< 2.09),
  libscalar-list-utils-perl (<< 1:1.38)
-Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.10.1-1), libperl5.8 (<< 5.8.0-20),
+Replaces: perl (<< 5.10.1-12), perl-modules (<< 5.20.1-3), libperl5.8 (<< 5.8.0-20),
  libscalar-list-utils-perl,
  libxsloader-perl,
  libsocket-perl,
+ libfile-temp-perl,
+ libfile-path-perl,
  libio-socket-ip-perl,
 Provides: perl5-base, ${perlapi:Provides},
  libscalar-list-utils-perl,
  libxsloader-perl,
  libsocket-perl,
+ libfile-temp-perl,
+ libfile-path-perl,
  libio-socket-ip-perl,
 Suggests: perl
 Description: minimal Perl system
@@ -51,18 +59,6 @@ Description: minimal Perl system
  standard run-time library required to perform basic tasks. For a full
  Perl installation, install "perl" (and its dependencies, "perl-modules"
  and "perl-doc").
-
-Package: libcgi-fast-perl
-Priority: optional
-Architecture: all
-Depends: perl (>= ${source:Version}), perl (<< ${Next-Upstream-Version}~), libfcgi-perl
-Description: CGI::Fast Perl module
- CGI::Fast is a subclass of the CGI object created by CGI.pm.  It is
- specialized to work well with the Open Market FastCGI standard, which
- greatly speeds up CGI scripts by turning them into persistently running
- server processes.  Scripts that perform time-consuming initialization
- processes, such as loading large modules or opening persistent database
- connections, will see large performance improvements.
 
 Package: perl-doc
 Section: doc
@@ -114,8 +110,10 @@ Package: perl-modules
 Priority: standard
 Architecture: all
 Multi-Arch: foreign
-Depends: perl (>= ${Upstream-Version}-1)
-Recommends: libarchive-extract-perl,
+Depends: perl-base (>= ${source:Version})
+Pre-Depends: dpkg (>= 1.17.17)
+Recommends: perl (>= ${Upstream-Version}-1),
+ libarchive-extract-perl,
  libmodule-pluggable-perl,
  libpod-latex-perl,
  libterm-ui-perl,
@@ -133,8 +131,9 @@ Suggests: libb-lint-perl,
 Conflicts: defoma (<< 0.11.12),
  mono-gac (<< 2.10.8.1-3)
 Breaks: libpod-parser-perl (<< 1.62),
+ perl (<< ${Upstream-Version}~),
+ pdl (<< 1:2.007-4),
  libansicolor-perl (<< 4.02),
- libfile-temp-perl (<< 0.2304),
  libnet-perl (<= 1:1.22),
  libattribute-handlers-perl (<< 0.96),
  libcgi-pm-perl (<< 3.65),
@@ -145,16 +144,16 @@ Breaks: libpod-parser-perl (<< 1.62),
  libtest-harness-perl (<< 3.30),
  libtest-simple-perl (<< 1.001002),
  liblocale-codes-perl (<< 3.30),
- libmodule-corelist-perl (<< 3.10),
+ libmodule-corelist-perl (<< 5.20150214),
  libio-zlib-perl (<< 1.10),
  libarchive-tar-perl (<< 1.96),
- libextutils-cbuilder-perl (<< 0.280216),
+ libextutils-cbuilder-perl (<< 0.280217),
  libmodule-build-perl (<< 0.420500),
  libmodule-load-perl (<< 0.32),
  liblocale-maketext-simple-perl (<< 0.21),
  libparams-check-perl (<< 0.38),
  libmodule-load-conditional-perl (<< 0.62),
- libversion-perl (<< 1:0.9908),
+ libversion-perl (<< 1:0.9909),
  libpod-simple-perl (<< 3.28),
  libextutils-parsexs-perl (<< 3.240000),
  libpod-escapes-perl (<< 1.06),
@@ -162,7 +161,7 @@ Breaks: libpod-parser-perl (<< 1.62),
  libparent-perl (<< 0.228),
  libautodie-perl (<< 2.23),
  libthread-queue-perl (<< 3.05),
- libfile-spec-perl (<< 3.4700),
+ libfile-spec-perl (<< 3.4801),
  libtime-local-perl (<< 1.2300),
  podlators-perl (<< 2.3.1),
  libunicode-collate-perl (<< 1.04),
@@ -177,13 +176,24 @@ Breaks: libpod-parser-perl (<< 1.62),
  libdigest-perl (<< 1.17),
  libextutils-install-perl (<< 1.67),
  libhttp-tiny-perl (<< 0.043),
- libfile-path-perl (<< 2.09),
  libcpan-meta-requirements-perl (<< 2.125),
  libexperimental-perl (<< 0.007),
  libpackage-constants-perl (<< 0.04),
+ pristine-tar (<< 1.33),
+ polygen-data (<< 1.0.6.ds2-13.1),
+ rinse (<< 3.0.7),
+ tvtime (<< 1.0.2-14),
+ pure-ftpd-common (<< 1.0.36-3.2),
+ mono-apache-server2 (<< 3.8-2.1),
+ mono-apache-server4 (<< 3.8-2.1),
+ mono-fastcgi-server2 (<< 3.8-2.1),
+ mono-fastcgi-server4 (<< 3.8-2.1),
+ shorewall (<< 4.6.4.3-2),
+ shorewall-core (<< 4.6.4.3-2),
+ patcher (<< 0.0.20040521-6.1),
+ cli-common (<< 0.9+nmu1),
 Replaces: libpod-parser-perl,
  libansicolor-perl,
- libfile-temp-perl,
  libnet-perl,
  libattribute-handlers-perl,
  libcgi-pm-perl,
@@ -226,13 +236,11 @@ Replaces: libpod-parser-perl,
  libdigest-perl,
  libextutils-install-perl,
  libhttp-tiny-perl,
- libfile-path-perl,
  libcpan-meta-requirements-perl,
  libexperimental-perl,
  libpackage-constants-perl,
 Provides: libpod-parser-perl,
  libansicolor-perl,
- libfile-temp-perl,
  libnet-perl,
  libattribute-handlers-perl,
  libi18n-langtags-perl,
@@ -273,7 +281,6 @@ Provides: libpod-parser-perl,
  libdigest-perl,
  libextutils-install-perl,
  libhttp-tiny-perl,
- libfile-path-perl,
  libcpan-meta-requirements-perl,
  libexperimental-perl,
 Description: Core Perl modules
@@ -289,13 +296,14 @@ Package: perl
 Priority: standard
 Architecture: any
 Multi-Arch: allowed
+Pre-Depends: dpkg (>= 1.17.17)
 Depends: perl-base (= ${binary:Version}), perl-modules (>= ${source:Version}), ${shlibs:Depends}
 Conflicts: libjson-pp-perl (<< 2.27200-2)
 Breaks: perl-doc (<< ${Upstream-Version}-1),
  libdigest-md5-perl (<< 2.53),
  libmime-base64-perl (<< 3.14),
  libtime-hires-perl (<< 1.9726),
- libstorable-perl (<< 2.49),
+ libstorable-perl (<< 2.49.01),
  libdigest-sha-perl (<< 5.88),
  libsys-syslog-perl (<< 0.33),
  libcompress-zlib-perl (<< 2.064),

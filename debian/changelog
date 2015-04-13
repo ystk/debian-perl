@@ -1,3 +1,131 @@
+perl (5.20.2-3) unstable; urgency=medium
+
+  * Improve the error message when a path is inaccessible during
+    module loading (Closes: #781120)
+  * Add more Breaks: entries for various packages which could be affected
+    by the perl-modules dependency change (see #777597)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 29 Mar 2015 15:20:48 +0100
+
+perl (5.20.2-2) unstable; urgency=medium
+
+  [ Dominic Hargreaves ]
+  * Make perl-modules Recommend perl
+
+  [ Niko Tyni ]
+  * Fix the Broken libfile-spec-perl versions.
+  * Backport upstream fix for a regexp performance regression
+    from 5.14. (Closes: #777556)
+  * Make perl-modules Break older versions of perl. (Closes: #779433)
+  * Make perl-modules Depend on a matching perl-base. (Closes: #779455)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 01 Mar 2015 19:58:59 +0200
+
+perl (5.20.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update Breaks versions for libfile-spec-perl, libmodule-corelist-perl,
+    libstorable-perl
+  * Break circular dependency between perl and perl-modules
+    (Closes: #777597, #502455)
+  * Add Breaks: entries for various packages which could be affected by
+    the above change, where they have been fixed
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 27 Feb 2015 17:48:02 +0000
+
+perl (5.20.1-5) unstable; urgency=medium
+
+  * Make perl-base and perl-modules Break perl (<< 5.20.0~)
+    to fix trigger related upgrade paths from wheezy. (Closes: #774844)
+    + also make perl-base, perl-modules, and perl Pre-Depend
+      on dpkg (>= 1.17.17) to get reliable trigger dependency
+      guarantees. (See #671711)
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 25 Jan 2015 18:26:53 +0200
+
+perl (5.20.1-4) unstable; urgency=medium
+
+  * Make perl-base and perl-modules Break pdl (<< 1:2.007-4)
+    to fix upgrade failures with dpkg triggers. (Closes: #773323)
+
+ -- Niko Tyni <ntyni@debian.org>  Fri, 19 Dec 2014 18:55:26 +0200
+
+perl (5.20.1-3) unstable; urgency=low
+
+  * Move File::Temp and its dependencies (File::Path, File::Basename,
+    and parent) to perl-base. (Closes: #757905)
+    See https://lists.debian.org/debian-devel/2014/11/msg00216.html
+
+ -- Niko Tyni <ntyni@debian.org>  Sun, 16 Nov 2014 18:54:17 +0200
+
+perl (5.20.1-2) unstable; urgency=medium
+
+  * Fix IO::Uncompress::Gunzip gunzip to in-memory file handle
+    (Closes: #747363)
+  * Fix t/io/socket.t on Hurd: include upstream fixes (Closes: #758718)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 19 Oct 2014 22:02:58 +0100
+
+perl (5.20.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * [SECURITY] CVE-2014-4330: don't recurse infinitely in Data::Dumper
+    (Closes: #762256) 
+  * Update Standards-Version (no changes)
+  * Update maintainer tests to reflect the fact that libcgi-fast-perl
+    is not being shipped
+  * Update Breaks versions for libfile-spec-perl, libmodule-corelist-perl,
+    libversion-perl
+  * Update patch metadata to reflect upstream status
+    (Closes: #762270, #762269)
+  * Upload to unstable
+
+ -- Dominic Hargreaves <dom@earth.li>  Sat, 20 Sep 2014 14:11:36 +0100
+
+perl (5.20.1~rc2-1) experimental; urgency=low
+
+  * New upstream release candidate
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 07 Sep 2014 18:42:23 +0100
+
+perl (5.20.1~rc1-1) experimental; urgency=low
+
+  * New upstream release candidate
+  * Don't skip dist/threads/t/stack.t on GNU/Hurd as Hurd now has
+    support for varying stack length sizes (Closes: #650175)
+  * Disable failing test in t/io/socket.t on GNU/Hurd (see: #758718)
+  * Modify $Config{libperl} to avoid exposing the full version
+    (Closes: #759989)
+  * Ensure that all manpage directories are installed with
+    appropriate permissions, fixing Lintian warnings
+  * Support POD_MAN_DATE in Pod::Man for the left-hand footer to
+    help with reproducible builds; thanks to Russ Allbery
+    (Closes: #759405)
+
+ -- Dominic Hargreaves <dom@earth.li>  Sun, 31 Aug 2014 18:17:29 -0700
+
+perl (5.20.0-6) unstable; urgency=medium
+
+  * Explicitly set mode of DEBIAN/conffiles to fix a Lintian error
+    in certain build environments
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 29 Aug 2014 21:32:22 -0700
+
+perl (5.20.0-5) unstable; urgency=medium
+
+  [ Niko Tyni ]
+  * Fix visible escape sequences in perldoc output by passing the "-R"
+    option to the "less" pager. (Closes: #758689)
+  * Pass explicit LD settings through to subdirectories again even if
+    the build system sets LD. (Closes: #758471)
+  * Drop the libcgi-fast-perl binary package, which is moving to
+    a source package of its own. (Closes: #759187)
+
+  [ Dominic Hargreaves ]
+  * Note simplified developer tools requirements
+
+ -- Dominic Hargreaves <dom@earth.li>  Thu, 28 Aug 2014 21:25:34 -0700
+
 perl (5.20.0-4) unstable; urgency=medium
 
   * Drop the -exp1 suffix from perlapi-5.20.0: no further changes
