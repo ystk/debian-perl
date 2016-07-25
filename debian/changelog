@@ -1,3 +1,24 @@
+perl (5.20.2-3+deb8u6) jessie-security; urgency=high
+
+  [ Niko Tyni ]
+  * [SECURITY] CVE-2016-1238: opportunistic loading of optional
+    modules can make many programs unintentionally load code
+    from the current working directory (which might be changed to
+    another directory without the user realising).
+    + allow user configurable removal of "." from @INC in
+      /etc/perl/sitecustomize.pl for a transitional period. (See: #588017)
+    + backport patches from [perl #127834] to fix known vulnerabilities
+      even if the user does not configure "." to be removed from @INC
+    + backport patches from [perl #127810] to fix various classes of
+      build failures in perl and CPAN modules if "." is removed from
+      @INC
+
+  [ Dominic Hargreaves ]
+  * [SECURITY] CVE-2016-6185: Make XSLoader skip relative paths not
+    on @INC. (Closes: #829578)
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 22 Jul 2016 16:30:45 +0100
+
 perl (5.20.2-3+deb8u5) jessie; urgency=medium
 
   * Apply patch from Niko Tyni fixing debugperl crashes with XS
