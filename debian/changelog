@@ -1,3 +1,10 @@
+perl (5.20.2-3+deb8u12) jessie-security; urgency=high
+
+  * [SECURITY] CVE-2018-18311: Integer overflow leading to buffer
+    overflow and segmentation fault
+
+ -- Dominic Hargreaves <dom@earth.li>  Fri, 30 Nov 2018 13:00:03 +0000
+
 perl (5.20.2-3+deb8u11) jessie-security; urgency=high
 
   * [SECURITY] CVE-2018-12015: fix directory traversal vulnerability
