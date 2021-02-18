@@ -101,3 +101,7 @@ fixes/CVE-2017-12883-5.20.diff
 fixes/CVE-2018-6913.diff
 fixes/CVE-2018-12015-Archive-Tar-directory-traversal.diff
 fixes/CVE-2018-18311.diff
+fixes/CVE-2020-10543.patch
+fixes/CVE-2020-10878.patch
+fixes/CVE-2020-12723.patch
+fixes/time-local-2020.diff
