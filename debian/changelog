@@ -1,3 +1,24 @@
+perl (5.20.2-3+deb8u14) jessie-security; urgency=medium
+
+  * Non-maintainer upload by ELTS team
+  * Fix CVE-2020-16156:
+     An attacker can prepend checksums for modified
+     packages to the beginning of CHECKSUMS files,
+     before the cleartext PGP headers. This makes
+     the Module::Signature::_verify() checks
+     in both cpan and cpanm pass.
+     Without the sigtext and plaintext arguments
+     to _verify(), the _compare() check is bypassed.
+     This results in _verify() only checking that
+     valid signed cleartext is present somewhere
+     in the file.
+  * Fix CVE-2023-31484:
+    CPAN.pm does not verify TLS certificates
+    when downloading distributions over HTTPS.
+  * Fix follow up failure in testsuite.
+
+ -- Bastien Roucariès <rouca@debian.org>  Thu, 24 Oct 2024 20:08:30 +0000
+
 perl (5.20.2-3+deb8u13) jessie-security; urgency=medium
 
   * Non-maintainer upload by the ELTS Team.

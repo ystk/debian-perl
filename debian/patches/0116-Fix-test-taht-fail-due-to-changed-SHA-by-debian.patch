@@ -1,0 +1,23 @@
+From 67a5e7a7424376f92672d8f04c2e9c9fefb9cea3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bastien=20Roucari=C3=A8s?= <rouca@debian.org>
+Date: Mon, 28 Oct 2024 09:09:11 +0000
+Subject: Fix test taht fail due to changed SHA by debian
+
+forwarded: not-needed
+---
+ t/porting/customized.t | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/t/porting/customized.t b/t/porting/customized.t
+index 6b9977f59..2d1075904 100644
+--- a/t/porting/customized.t
++++ b/t/porting/customized.t
+@@ -101,6 +101,8 @@ foreach my $module ( sort keys %Modules ) {
+     }
+ SKIP: {
+     skip("$file modified for Debian", 1) if $file eq 'cpan/Encode/bin/enc2xs';
++    skip("$file modified for Debian", 1) if $file eq 'cpan/CPAN/lib/CPAN/HTTP/Client.pm';
++    skip("$file modified for Debian", 1) if $file eq 'cpan/CPAN/lib/CPAN/Distribution.pm';
+     my $should_be = $customised{ $module }->{ $file };
+     is( $id, $should_be, "SHA for $file matches stashed SHA" );
+ }

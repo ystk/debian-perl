@@ -1,0 +1,28 @@
+From 0f57a49f43624fa399855bd456212719b7d2ced7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=3D=3FUTF-8=3Fq=3FDagfinn=3D20Ilmari=3D20Manns=3DC3=3DA5ke?=
+ =?UTF-8?q?r=3F=3D?= <ilmari@ilmari.org>
+Date: Thu, 5 Feb 2015 21:37:08 +0000
+Subject: Fix setenv() replacement documentation in perlclib
+
+my_putenv doesn't exist, the function is called my_setenv
+
+(cherry picked from commit 7ad03f5069e771fe44e92b694a23f10354c548d1)
+
+Bug-Debian: https://bugs.debian.org/822336
+---
+ pod/perlclib.pod | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pod/perlclib.pod b/pod/perlclib.pod
+index 0cdee2491..2e2078439 100644
+--- a/pod/perlclib.pod
++++ b/pod/perlclib.pod
+@@ -222,7 +222,7 @@ everywhere by now.
+  system(s)                   Don't. Look at pp_system or use my_popen
+ 
+  getenv(s)                   PerlEnv_getenv(s)
+- setenv(s, val)              my_putenv(s, val)
++ setenv(s, val)              my_setenv(s, val)
+ 
+ =head2 Miscellaneous functions
+ 
